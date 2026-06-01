@@ -11,6 +11,7 @@ public class FlashcardModel implements Serializable {
     private String meaning;        // Nghĩa tiếng Việt (Hiển thị mặt sau)
     private String example;        // Câu ví dụ (Hiển thị mặt sau)
     private String exampleMeaning; // Nghĩa của câu ví dụ (Hiển thị mặt sau)
+    private String imagePath;      // Đường dẫn ảnh lưu tại máy (Local)
 
     // Các trường phục vụ thuật toán Lặp lại ngắt quãng (Spaced Repetition)
     private int intervalDays;      // Khoảng thời gian lặp lại (tính theo ngày)
@@ -31,9 +32,16 @@ public class FlashcardModel implements Serializable {
         this.meaning = meaning;
         this.example = example;
         this.exampleMeaning = exampleMeaning;
+        this.imagePath = null;
         this.intervalDays = 1;       // Từ mới mặc định ngày mai phải ôn lại ngay
         this.easeFactor = 2.5;       // Hệ số tiêu chuẩn thuật toán SM-2
         this.nextReviewDate = System.currentTimeMillis(); // Mặc định hiển thị để học ngay
+    }
+
+    // Constructor có ảnh
+    public FlashcardModel(String id, String deckId, String word, String wordType, String ipa, String meaning, String example, String exampleMeaning, String imagePath) {
+        this(id, deckId, word, wordType, ipa, meaning, example, exampleMeaning);
+        this.imagePath = imagePath;
     }
 
     // Các hàm Getter và Setter để đóng gói (Encapsulation) dữ liệu hợp lệ
@@ -60,6 +68,9 @@ public class FlashcardModel implements Serializable {
 
     public String getExampleMeaning() { return exampleMeaning; }
     public void setExampleMeaning(String exampleMeaning) { this.exampleMeaning = exampleMeaning; }
+
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     public int getIntervalDays() { return intervalDays; }
     public void setIntervalDays(int intervalDays) { this.intervalDays = intervalDays; }

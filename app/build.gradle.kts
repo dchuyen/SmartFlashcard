@@ -70,6 +70,12 @@ dependencies {
     }
     implementation("com.github.yuyakaido:cardstackview:2.3.4")
     implementation("com.google.firebase:firebase-auth:23.0.0")
-    // Thư viện tự động bắt lỗi và bung màn hình thông báo lỗi trực tiếp trên điện thoại
 
+    // Google ML Kit để nhận dạng và khoanh vùng vật thể
+    implementation("com.google.mlkit:object-detection:17.0.2")
+
+    // Thư viện xử lý thông tin hướng ảnh (Exif)
+    implementation("androidx.exifinterface:exifinterface:1.4.2")
+
+    // Thư viện tự động bắt lỗi và bung màn hình thông báo lỗi trực tiếp trên điện thoại
 }

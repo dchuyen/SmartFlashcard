@@ -1,15 +1,20 @@
 package com.example.smartflashcard.presentation;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartflashcard.R;
 import com.example.smartflashcard.data.FlashcardModel;
 import com.google.android.material.card.MaterialCardView;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +68,14 @@ public class FlashcardSwipeAdapter extends RecyclerView.Adapter<FlashcardSwipeAd
             }
             holder.tvCardContent.setText(frontText);
             holder.tvCardContent.setTextColor(Color.BLACK);
+
+            // Hiển thị ảnh ở mặt trước nếu có
+            if (card.getImagePath() != null && new File(card.getImagePath()).exists()) {
+                holder.ivCardImage.setImageBitmap(BitmapFactory.decodeFile(card.getImagePath()));
+                holder.ivCardImage.setVisibility(View.VISIBLE);
+            } else {
+                holder.ivCardImage.setVisibility(View.GONE);
+            }
         } else {
             StringBuilder backText = new StringBuilder();
             if (card.getIpa() != null && !card.getIpa().isEmpty()) {
@@ -74,6 +87,7 @@ public class FlashcardSwipeAdapter extends RecyclerView.Adapter<FlashcardSwipeAd
             }
             holder.tvCardContent.setText(backText.toString());
             holder.tvCardContent.setTextColor(Color.parseColor("#3B5BDB"));
+            holder.ivCardImage.setVisibility(View.GONE); // Thường mặt sau không hiện ảnh hoặc tùy thiết kế
         }
     }
 
@@ -85,11 +99,13 @@ public class FlashcardSwipeAdapter extends RecyclerView.Adapter<FlashcardSwipeAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         MaterialCardView itemCardView;
         TextView tvCardContent;
+        ImageView ivCardImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemCardView = itemView.findViewById(R.id.itemCardView);
             tvCardContent = itemView.findViewById(R.id.tvCardContentContent);
+            ivCardImage = itemView.findViewById(R.id.ivCardImage);
         }
     }
 }
