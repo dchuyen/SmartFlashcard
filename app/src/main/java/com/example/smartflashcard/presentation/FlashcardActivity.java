@@ -1,6 +1,7 @@
 package com.example.smartflashcard.presentation;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -190,8 +191,21 @@ public class FlashcardActivity extends AppCompatActivity implements CardStackLis
         toolbar.setNavigationOnClickListener(v -> finish());
         toolbar.inflateMenu(R.menu.menu_flashcard);
         toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_add_card) {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_add_card) {
                 showAddCardDialog();
+                return true;
+            } else if (itemId == R.id.action_edit_card) {
+                int position = manager.getTopPosition();
+                if (position < flashcardList.size()) {
+                    showEditCardDialog(flashcardList.get(position));
+                }
+                return true;
+            } else if (itemId == R.id.action_delete_card) {
+                int position = manager.getTopPosition();
+                if (position < flashcardList.size()) {
+                    confirmDeleteCard(flashcardList.get(position));
+                }
                 return true;
             }
             return false;
@@ -355,6 +369,113 @@ public class FlashcardActivity extends AppCompatActivity implements CardStackLis
                 .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
                 .setOnDismissListener(dialog -> etWordInDialog = null)
                 .show();
+    }
+
+    private void showEditCardDialog(FlashcardModel card) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_flashcard, null);
+        TextInputEditText etWord = dialogView.findViewById(R.id.etWord);
+        TextInputEditText etWordType = dialogView.findViewById(R.id.etWordType);
+        TextInputEditText etIpa = dialogView.findViewById(R.id.etIpa);
+        TextInputEditText etMeaning = dialogView.findViewById(R.id.etMeaning);
+        TextInputEditText etExample = dialogView.findViewById(R.id.etExample);
+        TextInputEditText etExampleMeaning = dialogView.findViewById(R.id.etExampleMeaning);
+        dialogImageView = dialogView.findViewById(R.id.ivSelectedImage);
+        cbAutoCropInDialog = dialogView.findViewById(R.id.cbAutoCrop);
+        MaterialButton btnPickImage = dialogView.findViewById(R.id.btnPickImage);
+        MaterialButton btnCaptureImage = dialogView.findViewById(R.id.btnCaptureImage);
+
+        etWordInDialog = etWord;
+        etWord.setText(card.getWord());
+        etWordType.setText(card.getWordType());
+        etIpa.setText(card.getIpa());
+        etMeaning.setText(card.getMeaning());
+        etExample.setText(card.getExample());
+        etExampleMeaning.setText(card.getExampleMeaning());
+
+        selectedImageUri = null;
+        if (card.getImagePath() != null) {
+            File imgFile = new File(card.getImagePath());
+            if (imgFile.exists()) {
+                dialogImageView.setImageBitmap(BitmapFactory.decodeFile(card.getImagePath()));
+                dialogImageView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        btnPickImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        btnCaptureImage.setOnClickListener(v -> {
+            File photoFile = new File(getFilesDir(), "camera_photo_" + System.currentTimeMillis() + ".jpg");
+            cameraImageUri = FileProvider.getUriForFile(this, "com.example.smartflashcard.fileprovider", photoFile);
+            cameraLauncher.launch(cameraImageUri);
+        });
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Sửa Flashcard")
+                .setView(dialogView)
+                .setPositiveButton("Cập nhật", (dialog, which) -> {
+                    String word = etWord.getText().toString().trim();
+                    String wordType = etWordType.getText().toString().trim();
+                    String ipa = etIpa.getText().toString().trim();
+                    String meaning = etMeaning.getText().toString().trim();
+                    String example = etExample.getText().toString().trim();
+                    String exampleMeaning = etExampleMeaning.getText().toString().trim();
+
+                    if (word.isEmpty() || meaning.isEmpty()) {
+                        Toast.makeText(this, "Vui lòng nhập từ và nghĩa!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    card.setWord(word);
+                    card.setWordType(wordType);
+                    card.setIpa(ipa);
+                    card.setMeaning(meaning);
+                    card.setExample(example);
+                    card.setExampleMeaning(exampleMeaning);
+
+                    if (selectedImageUri != null) {
+                        // Xóa ảnh cũ nếu có
+                        deleteLocalImage(card.getImagePath());
+                        boolean shouldCrop = cbAutoCropInDialog != null && cbAutoCropInDialog.isChecked();
+                        card.setImagePath(saveImageToInternalStorage(selectedImageUri, shouldCrop));
+                    }
+
+                    databaseReference.child(card.getId()).setValue(card).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Đã cập nhật flashcard!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                .setOnDismissListener(dialog -> etWordInDialog = null)
+                .show();
+    }
+
+    private void confirmDeleteCard(FlashcardModel card) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Xóa Flashcard")
+                .setMessage("Bạn có chắc chắn muốn xóa thẻ này không?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    deleteLocalImage(card.getImagePath());
+                    databaseReference.child(card.getId()).removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Đã xóa flashcard!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Xóa thất bại!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void deleteLocalImage(String path) {
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
 
     private String saveImageToInternalStorage(Uri uri, boolean shouldCrop) {
