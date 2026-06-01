@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "937339865991",
+    "project_id": "smart-7d648",
+    "storage_bucket": "smart-7d648.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937339865991:android:0593939246950a89c96122",
+        "android_client_info": {
+          "package_name": "com.example.smartflashcard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh--5ySEBxzPUQVWj5-W-TPwtVpbE21ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Trang chủ"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_create"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Tạo"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_library"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Thư viện"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Cài đặt"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F7FB"
+    tools:context=".presentation.FlashcardActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarFlashcard"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:title="Học Thẻ"
+        app:titleTextColor="#1A1D20"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/dividerFlashcard"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E6ED"
+        app:layout_constraintTop_toBottomOf="@id/toolbarFlashcard" />
+
+    <LinearLayout
+        android:id="@+id/layoutCounter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/dividerFlashcard">
+
+        <TextView
+            android:id="@+id/tvStillLearningCount"
+            android:layout_width="45dp"
+            android:layout_height="35dp"
+            android:background="@android:drawable/toast_frame"
+            android:backgroundTint="#FFF0E6"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#F76707"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvCardIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 / 0"
+            android:textColor="#5A6578"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvKnowCount"
+            android:layout_width="45dp"
+            android:layout_height="35dp"
+            android:background="@android:drawable/toast_frame"
+            android:backgroundTint="#E6FCF5"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#0CA678"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/cardStackView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutNavigation"
+        app:layout_constraintTop_toBottomOf="@id/layoutCounter" />
+
+    <LinearLayout
+        android:id="@+id/layoutNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPrevious"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="Trước"
+            app:strokeColor="#3B5BDB"
+            android:textColor="#3B5BDB" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#3B5BDB"
+            android:text="Sau"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
